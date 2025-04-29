@@ -15,7 +15,20 @@ public class Client {
     private String telefone;
 
     public Client(int id, String nome, String cpf, String email, String telefone) {
-        this.id = id;
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Nome inválido.");
+        }
+        if (!validarCPF(cpf)) {
+            throw new IllegalArgumentException("CPF inválido.");
+        }
+        if (email == null || !email.matches("^[\\w\\.-]+@[\\w\\.-]+\\.\\w{2,}$")) {
+            throw new IllegalArgumentException("Email inválido.");
+        }
+        if (telefone == null || telefone.isBlank()) {
+            throw new IllegalArgumentException("Telefone inválido.");
+        }
+
+    	this.id = id;
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;

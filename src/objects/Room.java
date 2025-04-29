@@ -16,7 +16,7 @@ public class Room {
     private int nmrSuites;
     private boolean frigobar;
     private boolean tv;
-    private double valor;
+    private double valorDiaria;
     private String descricao;
 
     public Room(int numero, int andar, int maxHospedes,int nmrCamas, int nmrSuites, boolean frigobar, boolean tv, double valor, String descricao) {
@@ -27,13 +27,13 @@ public class Room {
         this.nmrSuites = nmrSuites;
         this.frigobar = frigobar;
         this.tv = tv;
-        this.valor = valor;
+        this.valorDiaria = valor;
         this.descricao = descricao;
     }
 
     @Override
     public String toString() {
-        return "Room [numero=" + numero + ", andar=" + andar + ", valor=" + valor + ", maxHospedes=" + maxHospedes + ", nmrCamas=" + nmrCamas
+        return "Room [numero=" + numero + ", andar=" + andar + ", valor=" + valorDiaria + ", maxHospedes=" + maxHospedes + ", nmrCamas=" + nmrCamas
                 + ", descricao=" + descricao + ", nmrSuites=" + nmrSuites + ", tv=" + tv + ", frigobar=" + frigobar
                 + "]";
     }
@@ -54,12 +54,12 @@ public class Room {
         this.andar = andar;
     }
 
-    public double getValor() {
-        return valor;
+    public double getValorDiaria() {
+        return valorDiaria;
     }
 
-    public void setValor(double valor) {
-        this.valor = valor;
+    public void setValorDiaria(double valorDiaria) {
+        this.valorDiaria = valorDiaria;
     }
 
     public int getMaxHospedes() {
@@ -109,6 +109,8 @@ public class Room {
     public void setFrigobar(boolean frigobar) {
         this.frigobar = frigobar;
     }
+    
+    
 
 	
 	
