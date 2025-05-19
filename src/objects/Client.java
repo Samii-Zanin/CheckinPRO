@@ -2,19 +2,25 @@ package objects;
 
 import java.util.List;
 
+
 import conexao.Conexao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Client {
 
     private int id;
     private String nome;
+    private String sobrenome;
     private String cpf;
     private String email;
     private String telefone;
 
-    public Client(int id, String nome, String cpf, String email, String telefone) {
+    public Client(int id, String nome, String sobrenome, String cpf, String email, String telefone) {
         if (nome == null || nome.isBlank()) {
             throw new IllegalArgumentException("Nome inválido.");
         }
@@ -30,6 +36,7 @@ public class Client {
 
     	this.id = id;
         this.nome = nome;
+        this.sobrenome = sobrenome;
         this.cpf = cpf;
         this.email = email;
         this.telefone = telefone;
@@ -37,7 +44,8 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", email=" + email + ", telefone=" + telefone + "]";
+    	return "Client [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", cpf=" + cpf +
+    	           ", email=" + email + ", telefone=" + telefone + "]";
     }
 
     public int getId() {
@@ -55,7 +63,12 @@ public class Client {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
+    public String getSobrenome() {
+    	return sobrenome;
+	}
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
+    }
     public String getCpf() {
         return cpf;
     }
@@ -138,12 +151,15 @@ public class Client {
         }
     }
 
-	public static int atualizarCliente(String cpf, String email, String telefone) {
-		String sql = "UPDATE cliente SET email = ?, telefone = ? WHERE cpf = ?";
+	public static int atualizarCliente(int id, String nome, String sobrenome, String cpf, String telefone, String email) {
+		String sql = "UPDATE cliente SET nome = ?, sobrenome = ?, cpf = ?, telefone = ?, email = ? WHERE id_cliente = ?";
 		List<Object> parametros = new ArrayList<>();
-		parametros.add(email);
-		parametros.add(telefone);
+		parametros.add(nome);
+		parametros.add(sobrenome);
 		parametros.add(cpf);
+		parametros.add(telefone);
+		parametros.add(email);
+		parametros.add(id);
 
 		try {
 			int linhasAfetadas = Conexao.executeUpdate(sql, parametros);
@@ -157,11 +173,78 @@ public class Client {
 		
 		
 	}
+	
+	public static List<Client> buscarClientes(String filtro, String valor, String limitarRegString) {
+	    List<Client> clientes = new ArrayList<>();
+	    int limitarRegSql = 10; // Default limit
+	    try {
+	        limitarRegSql = Integer.parseInt(limitarRegString);
+	    } catch (NumberFormatException e) {
+	        System.out.println("Invalid limit value: " + limitarRegString + ". Using default limit.");
+	    }
 
-	public static int excluirCliente(String cpf) {
-		String sql = "DELETE FROM cliente WHERE cpf = ?";
+	    try (Connection conn = Conexao.getConnection()) {
+	        String sql = "SELECT * FROM cliente WHERE " + filtro + " LIKE ? LIMIT ?";
+	        
+	        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	            stmt.setString(1, "%" + valor + "%"); 
+	            stmt.setInt(2, limitarRegSql); 
+
+	            ResultSet rs = stmt.executeQuery();
+
+	            while (rs.next()) {
+	                clientes.add(new Client(
+	                    rs.getInt("id_cliente"),
+	                    rs.getString("nome"),
+	                    rs.getString("sobrenome"), // ✅ Include this!
+
+	                    rs.getString("cpf"),
+	                    rs.getString("email"),
+	                    rs.getString("telefone")
+	                ));
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return clientes;
+	}
+	//public static Client somaRegistrosSql()
+		//Client cliente = null
+	
+	public static Client buscarClientePorId(int idCliente) {
+	    Client cliente = null;
+
+	    try (Connection conn = Conexao.getConnection()) {
+	        String sql = "SELECT * FROM cliente WHERE id_cliente = ?";
+	        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+	            stmt.setInt(1, idCliente);
+	            ResultSet rs = stmt.executeQuery();
+
+	            if (rs.next()) {
+	                cliente = new Client(
+	                    rs.getInt("id_cliente"),
+	                    rs.getString("nome"),
+	                    rs.getString("sobrenome"), // ✅ Include this!
+	                    rs.getString("cpf"),
+	                    rs.getString("email"),
+	                    rs.getString("telefone")
+	                );
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return cliente;
+	}
+
+
+	public static int excluirCliente(int clienteId) {
+		String sql = "DELETE FROM cliente WHERE id_cliente = ?";
 		List<Object> parametros = new ArrayList<>();
-		parametros.add(cpf);
+		parametros.add(clienteId);
 
 		try {
 			int linhasAfetadas = Conexao.executeUpdate(sql, parametros);
@@ -173,4 +256,8 @@ public class Client {
 			return 0;
 		}
 	}
+
+	
+
+	
 }
