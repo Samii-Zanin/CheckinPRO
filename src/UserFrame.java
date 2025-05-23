@@ -340,7 +340,7 @@ public class UserFrame extends JPanel {
 		});
 	}
 
-		// ✅ Place loadClientData() outside of the ActionListener
+		
 		private void loadClientData() {
 		    modelTable.setRowCount(0); // Clear existing rows
 
