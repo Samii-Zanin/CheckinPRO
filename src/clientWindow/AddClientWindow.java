@@ -220,41 +220,35 @@ public class AddClientWindow extends JFrame  {
 		btnConcluirCadastro.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent evt) {
-		        try {
-		            String nome = textNomeCliente.getText().trim();
-		            String sobrenome = textSobrenomeCliente.getText().trim();
-		            String cpf = textCpfCliente.getText().trim();
-		            String email = textEmailCliente.getText().trim();
-		            String telefone = textTelefoneCliente.getText().trim();
-		
-		            if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty()) {
-		                JOptionPane.showMessageDialog(null, "Preencha todos os campos.", "Aviso", JOptionPane.WARNING_MESSAGE);
-		                return;
-		            }
-		
-		            if (isEditMode) {
-		                int clientId = Integer.parseInt(textIdCliente.getText().trim());
-		                int updatedRows = Client.atualizarCliente(clientId, nome, sobrenome, cpf, telefone, email);
-		
-		                if (updatedRows > 0) {
-		                    JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso!");
-		                } else {
-		                    JOptionPane.showMessageDialog(null, "Erro ao atualizar cliente.");
-		                }
-		            } else {
-		                int resultado = Client.cadastrarCliente(nome, sobrenome, cpf, email, telefone);
-		
-		                if (resultado > 0) {
-		                    JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
-		                } else {
-		                    JOptionPane.showMessageDialog(null, "Erro ao cadastrar cliente!");
-		                }
-		            }
-		        } catch (Exception e) {
-		            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE); // ✅ NOW it shows error inside the Frame!
+		    	String nome = textNomeCliente.getText().trim();
+		        String sobrenome = textSobrenomeCliente.getText().trim();  // Se for necessário
+		        String cpf = textCpfCliente.getText().trim();
+		        String email = textEmailCliente.getText().trim();
+		        String telefone = textTelefoneCliente.getText().trim();
+		        if (nome.isEmpty() || cpf.isEmpty() || email.isEmpty() || telefone.isEmpty()) {
+		            JOptionPane.showMessageDialog(null, "Preencha todos os campos.");
+		            return;
 		        }
-		    }
-		});
+		        if (isEditMode) {
+		            int clientId = Integer.parseInt(textIdCliente.getText().trim());
+		            int updatedRows = Client.atualizarCliente(clientId, nome, sobrenome, cpf, telefone, email); 
+		            if (updatedRows > 0) {
+		                JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso!");
+		            } else {
+		                JOptionPane.showMessageDialog(null, "Erro ao atualizar cliente.");
+		            }
+		        } else {
+		            int resultado = Client.cadastrarCliente(nome, cpf, email, telefone);
+		            if (resultado > 0) {
+		                JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
+		            } else {
+		                JOptionPane.showMessageDialog(null, "Erro ao cadastrar cliente!");
+		            }
+		        }
+
+		        getFrame().dispose();
+
+		}});
 		
 		btnCancelarCadastro.addActionListener(new ActionListener() {
 			@Override

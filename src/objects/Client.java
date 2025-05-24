@@ -2,9 +2,6 @@ package objects;
 
 import java.util.List;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
 
 import conexao.Conexao;
 
@@ -129,33 +126,30 @@ public class Client {
         }
     }
 
-    public static int cadastrarCliente(String nome, String sobrenome, String cpf, String email, String telefone) {
-    	    if (!validarCPF(cpf)) {
-    	        System.err.println("CPF inválido!");
-    	        return 0;
-    	    }
-
-    	    String sql = "INSERT INTO cliente (nome, sobrenome, cpf, email, telefone) VALUES (?, ?, ?, ?, ?)";
-
-    	    List<Object> parametros = new ArrayList<>();
-    	    parametros.add(nome);
-    	    parametros.add(sobrenome);
-    	    parametros.add(cpf);
-    	    parametros.add(email);
-    	    parametros.add(telefone);
-
-    	    try {
-    	        int linhasAfetadas = Conexao.executeUpdate(sql, parametros);
-    	        System.out.println("Cliente cadastrado com sucesso!");
-    	        return linhasAfetadas; 
-    	    } catch (Exception e) {
-    	    	// ✅ Properly displaying the error in a message dialog
-    	        JOptionPane.showMessageDialog(null, "Erro ao cadastrar cliente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-    	        e.printStackTrace(); 
-    	        return 0;
-
-    	    }
+    public static int cadastrarCliente(String nome, String cpf, String email, String telefone) {
+    	if(!validarCPF(cpf)) {
+			System.err.println("CPF inválido!");
+			return 0;
     	}
+    	
+    	String sql = "INSERT INTO cliente (nome, cpf, email, telefone) VALUES (?, ?, ?, ?)";
+
+        List<Object> parametros = new ArrayList<>();
+        parametros.add(nome);
+        parametros.add(cpf);
+        parametros.add(email);
+        parametros.add(telefone);
+
+        try {
+            int linhasAfetadas = Conexao.executeUpdate(sql, parametros);
+            System.out.println("Cliente cadastrado com sucesso!");
+            return linhasAfetadas; // retorna quantas linhas foram afetadas
+        } catch (Exception e) {
+            System.err.println("Erro ao cadastrar cliente: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+    }
 
 	public static int atualizarCliente(int id, String nome, String sobrenome, String cpf, String telefone, String email) {
 		String sql = "UPDATE cliente SET nome = ?, sobrenome = ?, cpf = ?, telefone = ?, email = ? WHERE id_cliente = ?";
@@ -173,7 +167,6 @@ public class Client {
 			return linhasAfetadas;
 		} catch (Exception e) {
 			System.err.println("Erro ao atualizar cliente: " + e.getMessage());
-			JOptionPane.showMessageDialog(null, "Erro ao atualizar cadastro: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE); 
 			e.printStackTrace();
 			return 0;
 		}
@@ -188,7 +181,6 @@ public class Client {
 	        limitarRegSql = Integer.parseInt(limitarRegString);
 	    } catch (NumberFormatException e) {
 	        System.out.println("Invalid limit value: " + limitarRegString + ". Using default limit.");
-	        JOptionPane.showMessageDialog(null, e);
 	    }
 
 	    try (Connection conn = Conexao.getConnection()) {
@@ -204,7 +196,8 @@ public class Client {
 	                clientes.add(new Client(
 	                    rs.getInt("id_cliente"),
 	                    rs.getString("nome"),
-	                    rs.getString("sobrenome"),
+	                    rs.getString("sobrenome"), // ✅ Include this!
+
 	                    rs.getString("cpf"),
 	                    rs.getString("email"),
 	                    rs.getString("telefone")
@@ -213,7 +206,6 @@ public class Client {
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Erro ao buscar clientes: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE); 
 	    }
 
 	    return clientes;
@@ -243,7 +235,6 @@ public class Client {
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, e);
 	    }
 
 	    return cliente;
@@ -261,7 +252,6 @@ public class Client {
 			return linhasAfetadas;
 		} catch (Exception e) {
 			System.err.println("Erro ao excluir cliente: " + e.getMessage());
-			JOptionPane.showMessageDialog(null, "Erro ao excluir cliente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE); 
 			e.printStackTrace();
 			return 0;
 		}
