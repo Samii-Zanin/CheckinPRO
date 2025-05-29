@@ -1,4 +1,4 @@
-package checkinWindow;
+package checkinWindow; 
 
 import java.awt.Color;
 import java.awt.EventQueue;

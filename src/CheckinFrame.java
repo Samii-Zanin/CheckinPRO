@@ -149,7 +149,7 @@ public class CheckinFrame extends JPanel {
 		add(btnNewButtonEditReserve);
 		
 		JButton btnNewButtonRefresh = new JButton("");
-		btnNewButtonRefresh.addActionListener(new ActionListener() {
+		btnNewButtonRefresh.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) {
 				loadData();
 			}

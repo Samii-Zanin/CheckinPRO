@@ -55,7 +55,7 @@ public class Client {
 
     
 
-    
+     
     public Client(String nome, String cpf) {
 		super();
 		this.nome = nome;

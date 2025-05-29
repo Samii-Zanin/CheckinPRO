@@ -200,7 +200,7 @@ public class RoomFrame extends JPanel {
                 });
             }
        
-    }
+    } 
 
         private void filterSearch(String op) {
             String parametersSearch = textFieldSearch.getText();
