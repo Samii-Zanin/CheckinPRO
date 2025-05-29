@@ -17,7 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import objects.Room;
-import objects.Room.Filter;
+
 import roomWindow.AddRoomWindow;
 import roomWindow.EditRoomWindow;
 
@@ -78,7 +78,7 @@ public class RoomFrame extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String op = comboBoxFilter.getSelectedItem().toString();
                 if (!op.equals("TODOS")) {
-                    filter(op);
+                	filterSearch(op);
                 } else {
                     loadData();
                 }
@@ -164,7 +164,11 @@ public class RoomFrame extends JPanel {
         btnNewButtonEditRoom.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		
+        		int id = (int) selectedRoomNumber;
+        		Room room = Room.searchRoomById(id);
+        
         		EditRoomWindow editRoom = new EditRoomWindow();
+        	    editRoom.insertDataInFields(room);
         		editRoom.frameEditRoom.setVisible(true);
         		
         	}
@@ -176,26 +180,50 @@ public class RoomFrame extends JPanel {
         loadData();
     }
 
-    private void loadData() {
-        model.setRowCount(0);
-        List<Object[]> dados = Filter.searchRoom(null, "TODOS");
-        for (Object[] linha : dados) {
-            model.addRow(linha);
-        }
         
-    }
+        
+        private void loadData() {
+            model.setRowCount(0);
+            
+            List<Room> rooms = Room.filter("TODOS", null); 
+            
+            for (Room room : rooms) {
+                model.addRow(new Object[]{
+                		room.getId(),
+                        room.getNumero(),
+                        room.getAndar(),
+                        room.getCapacidade(),
+                        room.getCamas(),
+                        room.getPreco_diaria(),
+                        room.getTipo(),
+                        room.getStatus(),
+                });
+            }
+       
+    } 
 
-    private void filter(String op) {
-        List<Object> parametersSearch = new ArrayList<>();
-        String parameter = textFieldSearch.getText();
-        parametersSearch.add(parameter);
-        model.setRowCount(0);
-        List<Object[]> data = Filter.searchRoom(parametersSearch, op);
-        for (Object[] row : data) {
-            model.addRow(row);
+        private void filterSearch(String op) {
+            String parametersSearch = textFieldSearch.getText();
+            model.setRowCount(0);
+            
+
+
+            List<Room> rooms = Room.filter(op, parametersSearch);
+            
+            for (Room room : rooms) {
+                model.addRow(new Object[]{
+                    room.getId(),
+                    room.getNumero(),
+                    room.getAndar(),
+                    room.getCapacidade(),
+                    room.getCamas(),
+                    room.getPreco_diaria(),
+                    room.getTipo(),
+                    room.getStatus(),
+                    
+                });
+            }
         }
-        
-    }
     
     	
 

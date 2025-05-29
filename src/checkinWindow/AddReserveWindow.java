@@ -1,10 +1,12 @@
-package checkinWindow;
+package checkinWindow; 
 
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -38,7 +40,7 @@ public class AddReserveWindow {
 
     public JFrame frameAddReserve;
     private JTextField textFieldCpf;
-    private JTextField textFieldRoomNumber;
+    public JTextField textFieldRoomNumber;
     private JDateChooser dateChooserArrive;
     private JDateChooser dateChooserDeparture;
     private JTable table;
@@ -103,42 +105,42 @@ public class AddReserveWindow {
         JLabel lblCpf = new JLabel("CPF do Cliente");
         lblCpf.setForeground(new Color(17, 193, 120));
         lblCpf.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        lblCpf.setBounds(47, 74, 183, 16);
+        lblCpf.setBounds(57, 545, 183, 16);
         mainPanelAddRoom.add(lblCpf);
         
         textFieldCpf = new JTextField();
         textFieldCpf.setColumns(10);
-        textFieldCpf.setBounds(47, 102, 206, 22);
+        textFieldCpf.setBounds(57, 573, 206, 22);
         mainPanelAddRoom.add(textFieldCpf);
         
         JLabel lblRoomNumber = new JLabel("Id do Quarto");
         lblRoomNumber.setForeground(new Color(17, 193, 120));
         lblRoomNumber.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        lblRoomNumber.setBounds(47, 254, 183, 16);
+        lblRoomNumber.setBounds(57, 365, 183, 16);
         mainPanelAddRoom.add(lblRoomNumber);
         
         textFieldRoomNumber = new JTextField();
         textFieldRoomNumber.setColumns(10);
-        textFieldRoomNumber.setBounds(47, 282, 206, 22);
+        textFieldRoomNumber.setBounds(57, 393, 206, 22);
         mainPanelAddRoom.add(textFieldRoomNumber);
         
         JLabel lblGuestNumber = new JLabel("Número de hóspedes");
         lblGuestNumber.setForeground(new Color(17, 193, 120));
         lblGuestNumber.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        lblGuestNumber.setBounds(47, 164, 183, 16);
+        lblGuestNumber.setBounds(57, 455, 183, 16);
         mainPanelAddRoom.add(lblGuestNumber);
         
         spinnerNumeroHospede = new JSpinner();
         spinnerNumeroHospede.setName("");
         spinnerNumeroHospede.setModel(new SpinnerNumberModel(1, 1, 10, 1));
-        spinnerNumeroHospede.setBounds(47, 192, 206, 22);
+        spinnerNumeroHospede.setBounds(57, 483, 206, 22);
         mainPanelAddRoom.add(spinnerNumeroHospede);
         
         JPanel panelCheckDate = new JPanel();
         panelCheckDate.setBackground(Color.DARK_GRAY);
         panelCheckDate.setBorder(new CompoundBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null), 
             new TitledBorder(null, "Conferir Datas", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(187, 187, 187))));
-        panelCheckDate.setBounds(47, 360, 206, 224);
+        panelCheckDate.setBounds(57, 119, 206, 224);
         mainPanelAddRoom.add(panelCheckDate);
         panelCheckDate.setLayout(null);
         
@@ -177,7 +179,7 @@ public class AddReserveWindow {
         lblAvailableRooms.setHorizontalAlignment(SwingConstants.CENTER);
         lblAvailableRooms.setForeground(new Color(17, 193, 120));
         lblAvailableRooms.setFont(new Font("Segoe UI", Font.PLAIN, 17));
-        lblAvailableRooms.setBounds(342, 74, 333, 28);
+        lblAvailableRooms.setBounds(342, 59, 333, 28);
         mainPanelAddRoom.add(lblAvailableRooms);
         
         JScrollPane scrollPane = new JScrollPane();
@@ -199,6 +201,21 @@ public class AddReserveWindow {
         table.setShowVerticalLines(true);
         table.setGridColor(Color.LIGHT_GRAY);
         scrollPane.setViewportView(table);
+        
+        table.addMouseListener(new MouseAdapter() {
+            private String selectedNumber;
+            
+            
+			@Override
+            public void mouseClicked(MouseEvent e) {
+                int row = table.getSelectedRow();
+                if (row >= 0) {
+                    selectedNumber = table.getValueAt(row, 0).toString();
+                    textFieldRoomNumber.setText(selectedNumber);
+                    
+                }
+            }
+        });
         
         JButton btnClear = new JButton("Limpar");
         btnClear.setIcon(new ImageIcon(AddReserveWindow.class.getResource("/img/icons8-pencil-eraser-30.png")));

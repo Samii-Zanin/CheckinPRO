@@ -209,6 +209,7 @@ public class EditRoomWindow {
         MainPanelEditRoom.add(comboBoxTipoQuarto);
         
         textFieldIdQuarto = new JTextField();
+        textFieldIdQuarto.setEditable(false);
         textFieldIdQuarto.setColumns(10);
         textFieldIdQuarto.setBounds(64, 101, 211, 22);
         MainPanelEditRoom.add(textFieldIdQuarto);
@@ -224,7 +225,20 @@ public class EditRoomWindow {
         frameEditRoom.setVisible(b);
     }
     
-    
+    public void  insertDataInFields(Room room) {
+    	
+    	textFieldIdQuarto.setText(String.valueOf(room.getId()));
+		textFieldIdentificacaoQuarto.setText(String.valueOf(room.getNumero()));
+		textFieldAndarQuarto.setText(String.valueOf(room.getAndar()));
+		spinnerValorQuarto.setValue(room.getPreco_diaria());
+		spinnerMaximoHospede.setValue(room.getCapacidade());
+		spinnerNmrCamas.setValue(room.getCamas());
+		textAreaDescricaoQuarto.setText(room.getDescricao());
+		comboBoxTipoQuarto.setSelectedItem(room.getTipo());
+    	
+    	
+    	
+    }
       
     private void RoomUpdate() {
     	
@@ -238,13 +252,13 @@ public class EditRoomWindow {
 	         int nmrCamas = ((Number) spinnerNmrCamas.getValue()).intValue();
 	         String descricao = textAreaDescricaoQuarto.getText();
 	         String tipo = (String) comboBoxTipoQuarto.getSelectedItem();
-	         String status = "Pendente"; 
+	        
        
        
-        int result = Room.editRoom(id, nmrQuarto, tipo, descricao, maxHospedes, valorDiaria, status, nmrCamas, andar);
+        int result = Room.editRoom(id, nmrQuarto, tipo, descricao, maxHospedes, valorDiaria, nmrCamas, andar);
         
        
-        
+         
         if (result > 0) {
             JOptionPane.showMessageDialog(frameEditRoom, "Quarto editado com sucesso!");
       

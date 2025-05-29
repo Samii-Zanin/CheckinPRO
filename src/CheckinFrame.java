@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
 
 import checkinWindow.AddReserveWindow;
 import objects.Reserve;
-import objects.Reserve.Filter;
+import objects.Room;
 
 import javax.swing.ImageIcon;
 
@@ -149,7 +149,7 @@ public class CheckinFrame extends JPanel {
 		add(btnNewButtonEditReserve);
 		
 		JButton btnNewButtonRefresh = new JButton("");
-		btnNewButtonRefresh.addActionListener(new ActionListener() {
+		btnNewButtonRefresh.addActionListener(new ActionListener() { 
 			public void actionPerformed(ActionEvent e) {
 				loadData();
 			}
@@ -194,25 +194,47 @@ public class CheckinFrame extends JPanel {
 		
 		 private void loadData() {
 		        model.setRowCount(0);
-		        List<Object[]> dados = Filter.pesquisarReserva(null, "TODOS");
-		        for (Object[] linha : dados) {
-		            model.addRow(linha);
+		        
+		        List<Reserve> reserves = Reserve.filter("TODOS", null);
+		        
+		        for (Reserve reserve : reserves) {
+	                model.addRow(new Object[]{
+	                   
+	                		reserve.getId(),
+	                        reserve.getClientName().getNome(),  
+	                        reserve.getId_client().getCpf(),   
+	                        reserve.getId_Room().getId(),  
+	                        reserve.getCheckinDate(),
+	                        reserve.getCheckoutDate(),
+	                        reserve.getStatus()	
+	                });
 		        }
 		        
 		    }
 
 		    private void filter(String op) {
-		        List<Object> parametersSearch = new ArrayList<>();
+		       
 		        String parameter = textFieldSearchCheckin.getText().toString();
-		        parametersSearch.add(parameter);
 		        model.setRowCount(0);
-		        List<Object[]> data = Filter.pesquisarReserva(parametersSearch, op);
-		        for (Object[] row : data) {
-		            model.addRow(row);}
-		        		
-	  		}
+		        List<Reserve> reserves = Reserve.filter(op, parameter);
 		        
-		    
+		        for (Reserve reserve : reserves) {
+	                model.addRow(new Object[]{
+	                   
+	                		reserve.getId(),
+	                        reserve.getClientName().getNome(),  
+	                        reserve.getId_client().getCpf(),   
+	                        reserve.getId_Room().getId(),  
+	                        reserve.getCheckinDate(),
+	                        reserve.getCheckoutDate(),
+	                        reserve.getStatus()	
+	               
+	               
+	                });
+	                
+		        }
+		    }
+	                
 		    private void  confirmReserve() {  
 		    	 if (selectedReserveNumber == null) {
 		             JOptionPane.showMessageDialog(this, "Selecione uma reserva  para confirmar entrada", "Aviso", JOptionPane.WARNING_MESSAGE);
