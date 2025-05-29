@@ -53,14 +53,27 @@ public class Client {
         this.telefone = telefone;
     }
 
-   
-    public Client(int id) {
-        this.id = id;
-    }
-
     
 
-    @Override
+    
+    public Client(String nome, String cpf) {
+		super();
+		this.nome = nome;
+		this.cpf = cpf;
+	}
+
+
+
+
+	public Client(int id) {
+		super();
+		this.id = id;
+	}	
+	
+
+
+
+	@Override
     public String toString() {
         return "Client [id=" + id + ", nome=" + nome + ", sobrenome=" + sobrenome + ", cpf=" + cpf +
                ", email=" + email + ", telefone=" + telefone + "]";
@@ -353,16 +366,22 @@ public class Client {
 	    List<Object> parametros = new ArrayList<>();
 	    parametros.add(clienteId);
 	    List<Reserve> reservas = new ArrayList<>();
-
+	    Client clientName = null;
 	    try (ResultSet rs = (ResultSet) Conexao.executeQuery(sql, parametros)) {
 	        while (rs.next()) {
 	            Reserve reserva = new Reserve(
-	                rs.getInt("id"),
-	                rs.getString("data_checkin"),
-	                rs.getString("data_checkout"),
-	                new Room(rs.getInt("id")), //
-	                new Client(clienteId), // 
-	                false, false, false, 0.0, rs.getString("status") //
+	            		 rs.getInt("id_reserva"),
+	                     rs.getString("data_checkin"),
+	                     rs.getString("data_checkout"),
+	                     new Room(rs.getInt("id_quarto")),
+	                     new Client(rs.getInt("id_cliente")),
+	                     rs.getDouble("valor"),
+	                     rs.getString("status"),
+	                     rs.getInt("quantidade_pessoas"),
+	                     clientName
+	                
+	                
+	                
 	            );
 	            reservas.add(reserva);
 	        }
@@ -372,7 +391,11 @@ public class Client {
 	    }
 
 	    return reservas; 
-	}	
+	}
+
+
+
+	
 
 	
 

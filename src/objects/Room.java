@@ -8,16 +8,7 @@ import java.util.List;
 import conexao.Conexao;
 
 public class Room {
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-
-	private int id;
+    private int id;
     private int numero;
     private String tipo;
     private String descricao;
@@ -27,7 +18,6 @@ public class Room {
     private int camas;
     private int andar;
 
-    // ✅ Existing constructor (Full object initialization)
     public Room(int id, int numero, String tipo, String descricao, int capacidade, int preco_diaria, 
                 String status, int camas, int andar) {
         this.id = id;
@@ -41,13 +31,14 @@ public class Room {
         this.andar = andar;
     }
 
-    // ✅ New constructor (Only ID)
-    public Room(int id) {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
-
-    // Getters e Setters
     public int getNumero() {
         return numero;
     }
@@ -119,62 +110,66 @@ public class Room {
                ", status=" + status + ", camas=" + camas + ", andar=" + andar + "]";
     }
 
-    public static class Filter {
-        public static List<Object[]> searchRoom(List<Object> parametersSearch, String op) {
-            String sql;
-            List<Object[]> result = new ArrayList<>();
+    public static List<Room> filter(String op, String parametersSearch) {
+        String sql = "";
+        List<Room> result = new ArrayList<>();
 
-            if (op.equals("NÚMERO")) {
-                sql = "SELECT * FROM quarto WHERE nmr_quarto LIKE ?";
-            } else if (op.equals("ANDAR")) {
-                sql = "SELECT * FROM quarto WHERE andar = ?";
-            } else if (op.equals("TODOS")) {
-                sql = "SELECT * FROM quarto";
-                parametersSearch = null; 
-            } else {
-                return result;
-            }
-
-            try (ResultSet rs = Conexao.executeQuery(sql, parametersSearch)) {
-                while (rs != null && rs.next()) {
-                    Object[] linha = {
-                        rs.getInt("id"),
-                        rs.getInt("nmr_quarto"),
-                        rs.getInt("andar"),
-                        rs.getInt("capacidade"),
-                        rs.getInt("camas"),
-                        "R$" + rs.getInt("preco_diaria"),
-                        rs.getString("tipo"),
-                        rs.getString("status")
-                    };
-                    result.add(linha);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return result;
+        if (op.equals("NÚMERO")) {
+            sql = "SELECT * FROM quarto WHERE nmr_quarto LIKE ?";
+        } else if (op.equals("ANDAR")) {
+            sql = "SELECT * FROM quarto WHERE andar = ?";
+        } else if (op.equals("TODOS")) {
+            sql = "SELECT * FROM quarto";
         }
+    
+        try {
+            ArrayList<Object> params = new ArrayList<>();
+            if (!op.equals("TODOS")) {
+                params.add(parametersSearch);
+            }
+            
+            ResultSet rs = Conexao.executeQuery(sql, params);
+            while (rs != null && rs.next()) {
+                Room room = new Room(
+                    rs.getInt("id"),
+                    rs.getInt("nmr_quarto"),
+                    rs.getString("tipo"),
+                    rs.getString("descricao"),
+                    rs.getInt("capacidade"),
+                    rs.getInt("preco_diaria"),
+                    rs.getString("status"),
+                    rs.getInt("camas"),
+                    rs.getInt("andar")
+                );
+                result.add(room);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    public static int addRoom(int nmrQuarto, int andar, int valorDiaria, int maxHospedes, 
-                                    int nmrCamas, String descricao, String tipo) {
+    public Room(int id) {
+		super();
+		this.id = id;
+	}
+
+	public static int addRoom(int nmrQuarto, int andar, int valorDiaria, int maxHospedes, 
+                            int nmrCamas, String descricao, String tipo) {
         String sql = "INSERT INTO quarto (nmr_quarto, tipo, descricao, capacidade, preco_diaria, camas, andar) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
         
-        ArrayList<Object> parameter = new ArrayList<>();
-        parameter.add(nmrQuarto);
-        parameter.add(tipo);
-        parameter.add(descricao);
-        parameter.add(maxHospedes);
-        parameter.add(valorDiaria);
-        parameter.add(nmrCamas);
-        parameter.add(andar);
-        
-        
+        ArrayList<Object> parameters = new ArrayList<>();
+        parameters.add(nmrQuarto);
+        parameters.add(tipo);
+        parameters.add(descricao);
+        parameters.add(maxHospedes);
+        parameters.add(valorDiaria);
+        parameters.add(nmrCamas);
+        parameters.add(andar);
         
         try {
-            int insertRoomRows = Conexao.executeUpdate(sql, parameter);
-            return insertRoomRows;
+            return Conexao.executeUpdate(sql, parameters);
         } catch (Exception e) {
             System.err.println("Erro ao inserir quarto: " + e.getMessage());
             e.printStackTrace();
@@ -189,8 +184,7 @@ public class Room {
         parameter.add(id);
         
         try {
-            int deleteRoomRows = Conexao.executeUpdate(sql, parameter);
-            return deleteRoomRows;
+            return Conexao.executeUpdate(sql, parameter);
         } catch (Exception e) {
             System.err.println("Erro ao deletar quarto: " + e.getMessage());
             e.printStackTrace();
@@ -198,45 +192,65 @@ public class Room {
         }
     }
 
-    public static int editRoom(int id, int nmrQuarto, String tipo, String descricao, int maxHospedes, int valorDiaria, String status, int nmrCamas, int andar) {
+    public static Room searchRoomById(int id) {
+        String sql = "SELECT * FROM quarto WHERE id = ?";
+        ArrayList<Object> parameter = new ArrayList<>();
+        parameter.add(id);
         
-            ArrayList<Object> parameter = new ArrayList<>();  
-            parameter.add(nmrQuarto);
-            parameter.add(andar);
-            parameter.add(maxHospedes);
-            parameter.add(nmrCamas);
-            parameter.add(valorDiaria);
-            parameter.add(descricao);
-            parameter.add(tipo);
-            parameter.add(id);
-
-            
-            String sql = "UPDATE QUARTO SET nmr_quarto = ?, andar = ?, capacidade = ?, camas = ?, " +
-                         "preco_diaria = ?, descricao = ?, tipo = ? WHERE id = ?";
-            
-            try {
-                int updatedRows = Conexao.executeUpdate(sql, parameter);
-                return updatedRows;
-            } catch (Exception e) {
-                System.err.println("Erro ao editar quarto: " + e.getMessage());
-                e.printStackTrace();
-                return 0;
+        try {
+            ResultSet rs = Conexao.executeQuery(sql, parameter);
+            if (rs != null && rs.next()) {
+                return new Room(
+                    rs.getInt("id"),
+                    rs.getInt("nmr_quarto"),
+                    rs.getString("tipo"),
+                    rs.getString("descricao"),
+                    rs.getInt("capacidade"),
+                    rs.getInt("preco_diaria"),
+                    rs.getString("status"),
+                    rs.getInt("camas"),
+                    rs.getInt("andar")
+                );
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return null;
+    }
     
+    public static int editRoom(int id, int nmrQuarto, String tipo, String descricao, int maxHospedes, 
+                             int valorDiaria , int nmrCamas, int andar) {
+        ArrayList<Object> parameters = new ArrayList<>();  
+        parameters.add(nmrQuarto);
+        parameters.add(tipo);
+        parameters.add(descricao);
+        parameters.add(maxHospedes);
+        parameters.add(valorDiaria);
+        parameters.add(nmrCamas);
+        parameters.add(andar);
+        parameters.add(id);
+
+        String sql = "UPDATE quarto SET nmr_quarto = ?, tipo = ?, descricao = ?, capacidade = ?, " +
+                     "preco_diaria = ?, camas = ?, andar = ? WHERE id = ?";
+        
+        try {
+            return Conexao.executeUpdate(sql, parameters);
+        } catch (Exception e) {
+            System.err.println("Erro ao editar quarto: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+    }
     
     public static int searchPrice(int id) {
-        String sql = "SELECT preco_diaria FROM quarto WHERE id = ?;";
+        String sql = "SELECT preco_diaria FROM quarto WHERE id = ?";
         ArrayList<Object> parameter = new ArrayList<>(); 
-
         parameter.add(id);
 
         try {
             ResultSet rs = Conexao.executeQuery(sql, parameter);
-            
-            if (rs.next()) {  
-                int price = rs.getInt("preco_diaria");
-                return price;
+            if (rs != null && rs.next()) {  
+                return rs.getInt("preco_diaria");
             }
         } catch (Exception e) {
             System.err.println("Erro ao buscar preço: " + e.getMessage());
@@ -244,4 +258,5 @@ public class Room {
         }
         return 0;
     }
+    
 }
