@@ -71,16 +71,6 @@ CREATE TABLE `reserva` (
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-DROP TABLE IF EXISTS `servicos_extra`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `servicos_extra` (
-  `id_servico` int NOT NULL AUTO_INCREMENT,
-  `descricao` varchar(255) NOT NULL,
-  `valor` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`id_servico`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
 
 DROP TABLE IF EXISTS `reserva_servico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -168,3 +158,4 @@ INSERT INTO `servicos_extra` VALUES (58,'Barbearia',70.00);
 INSERT INTO `servicos_extra` VALUES (59,'Manicure e pedicure',75.00);
 INSERT INTO `servicos_extra` VALUES (60,'Aula de violão',85.00);
 INSERT INTO `servicos_extra` VALUES (61,'Patinete Elétrico $/hora',50.00);
+
