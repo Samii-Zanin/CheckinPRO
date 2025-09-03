@@ -1,27 +1,5 @@
--- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
---
--- Host: localhost    Database: checkinpro
--- ------------------------------------------------------
--- Server version	8.0.41
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `cliente`
---
-
+create database checkinpro;
 DROP TABLE IF EXISTS `cliente`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cliente` (
   `id_cliente` int NOT NULL AUTO_INCREMENT,
   `nome` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
@@ -37,54 +15,19 @@ CREATE TABLE `cliente` (
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `cliente`
---
-
-LOCK TABLES `cliente` WRITE;
-/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES (4,'Carlos','Siro','isossos@gmail.com','0000','48919071004','5465675765545','2025-05-26 19:27:59');
-INSERT INTO `cliente` VALUES (6,'Samii','Zanin','samiizanin@gmail.com','0000','034.080.390-89','54999804026','2025-06-18 22:59:52');
-INSERT INTO `cliente` VALUES (7,'Nicoli','Cieslak','nicki@gmail.com','0000','04720579019','545454545454','2025-06-20 21:27:09');
-INSERT INTO `cliente` VALUES (10,'Neli','Zanin','neli@gmail.com','0000','92203000015','54999114023','2025-06-22 14:41:24');
-/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `pagamento`
---
-
-DROP TABLE IF EXISTS `pagamento`;
+DROP TABLE IF EXISTS `servicos_extra`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `pagamento` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `id_reserva` int NOT NULL,
-  `valor_total` decimal(10,2) NOT NULL,
-  `metodo_pagamento` enum('Crédito','Débito','Dinheiro','PIX') NOT NULL,
-  `status_pagamento` enum('Pendente','Concluído','Estornado') NOT NULL DEFAULT 'Pendente',
-  `data_pagamento` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_reserva` (`id_reserva`),
-  CONSTRAINT `pagamento_ibfk_1` FOREIGN KEY (`id_reserva`) REFERENCES `reserva` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE TABLE `servicos_extra` (
+  `id_servico` int NOT NULL AUTO_INCREMENT,
+  `descricao` varchar(255) NOT NULL,
+  `valor` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id_servico`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `pagamento`
---
 
-LOCK TABLES `pagamento` WRITE;
-/*!40000 ALTER TABLE `pagamento` DISABLE KEYS */;
-INSERT INTO `pagamento` VALUES (11,10,250.00,'Dinheiro','Concluído','2025-06-21 23:52:16');
-INSERT INTO `pagamento` VALUES (18,11,2160.00,'Dinheiro','Concluído','2025-06-22 14:19:40');
-INSERT INTO `pagamento` VALUES (20,12,14600.00,'Débito','Concluído','2025-06-25 21:31:11');
-/*!40000 ALTER TABLE `pagamento` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `quarto`
---
+
 
 DROP TABLE IF EXISTS `quarto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -104,22 +47,7 @@ CREATE TABLE `quarto` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `quarto`
---
 
-LOCK TABLES `quarto` WRITE;
-/*!40000 ALTER TABLE `quarto` DISABLE KEYS */;
-INSERT INTO `quarto` VALUES (1,'Deluxe','Quarto aconchego para casais exigentes',2,250.00,'Disponível',1,1,1);
-INSERT INTO `quarto` VALUES (2,'Standard','Quarto aconchegante para suruba entre 4 casais',4,350.00,'Disponível',2,2,2);
-INSERT INTO `quarto` VALUES (3,'Suíte','Quarto elegante',2,1500.00,'Disponível',104,2,1);
-INSERT INTO `quarto` VALUES (4,'Deluxe','Quarto casal com luxo garantido, ótimo custo benefício, frente a avenida brasil',2,450.00,'Disponível',22,1,2);
-/*!40000 ALTER TABLE `quarto` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `reserva`
---
 
 DROP TABLE IF EXISTS `reserva`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -143,21 +71,16 @@ CREATE TABLE `reserva` (
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `reserva`
---
+DROP TABLE IF EXISTS `servicos_extra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `servicos_extra` (
+  `id_servico` int NOT NULL AUTO_INCREMENT,
+  `descricao` varchar(255) NOT NULL,
+  `valor` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id_servico`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-LOCK TABLES `reserva` WRITE;
-/*!40000 ALTER TABLE `reserva` DISABLE KEYS */;
-INSERT INTO `reserva` VALUES (10,6,1,'2025-06-25','2025-06-25',1,'Concluída','2025-06-19 01:20:40',250.00,NULL);
-INSERT INTO `reserva` VALUES (11,7,3,'2026-05-29','2026-05-30',2,'Concluída','2025-06-20 09:30:10',1500.00,NULL);
-INSERT INTO `reserva` VALUES (12,10,3,'2025-07-01','2025-07-10',1,'Concluída','2025-06-22 02:42:36',1500.00,NULL);
-/*!40000 ALTER TABLE `reserva` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `reserva_servico`
---
 
 DROP TABLE IF EXISTS `reserva_servico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -173,44 +96,23 @@ CREATE TABLE `reserva_servico` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `reserva_servico`
---
-
-LOCK TABLES `reserva_servico` WRITE;
-/*!40000 ALTER TABLE `reserva_servico` DISABLE KEYS */;
-INSERT INTO `reserva_servico` VALUES (1,10,12);
-INSERT INTO `reserva_servico` VALUES (2,2,11);
-INSERT INTO `reserva_servico` VALUES (2,10,12);
-INSERT INTO `reserva_servico` VALUES (3,2,11);
-INSERT INTO `reserva_servico` VALUES (3,10,12);
-INSERT INTO `reserva_servico` VALUES (4,2,11);
-INSERT INTO `reserva_servico` VALUES (7,2,11);
-INSERT INTO `reserva_servico` VALUES (8,1,11);
-/*!40000 ALTER TABLE `reserva_servico` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `servicos_extra`
---
-
-DROP TABLE IF EXISTS `servicos_extra`;
+DROP TABLE IF EXISTS `pagamento`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `servicos_extra` (
-  `id_servico` int NOT NULL AUTO_INCREMENT,
-  `descricao` varchar(255) NOT NULL,
-  `valor` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`id_servico`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `pagamento` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_reserva` int NOT NULL,
+  `valor_total` decimal(10,2) NOT NULL,
+  `metodo_pagamento` enum('Crédito','Débito','Dinheiro','PIX') NOT NULL,
+  `status_pagamento` enum('Pendente','Concluído','Estornado') NOT NULL DEFAULT 'Pendente',
+  `data_pagamento` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_reserva` (`id_reserva`),
+  CONSTRAINT `pagamento_ibfk_1` FOREIGN KEY (`id_reserva`) REFERENCES `reserva` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `servicos_extra`
---
 
-LOCK TABLES `servicos_extra` WRITE;
-/*!40000 ALTER TABLE `servicos_extra` DISABLE KEYS */;
 INSERT INTO `servicos_extra` VALUES (1,'Café',30.00);
 INSERT INTO `servicos_extra` VALUES (2,'Almoço',50.00);
 INSERT INTO `servicos_extra` VALUES (3,'Café da manhã',30.00);
@@ -266,20 +168,3 @@ INSERT INTO `servicos_extra` VALUES (58,'Barbearia',70.00);
 INSERT INTO `servicos_extra` VALUES (59,'Manicure e pedicure',75.00);
 INSERT INTO `servicos_extra` VALUES (60,'Aula de violão',85.00);
 INSERT INTO `servicos_extra` VALUES (61,'Patinete Elétrico $/hora',50.00);
-/*!40000 ALTER TABLE `servicos_extra` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Dumping routines for database 'checkinpro'
---
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2025-08-18 21:29:30
